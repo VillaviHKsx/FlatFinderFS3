@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
-
+//import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+//import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig';
 
 function Register() {
   const [firstName, setFirstName] = useState('');
@@ -14,8 +16,8 @@ function Register() {
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
-  const auth = getAuth();
-  const db = getFirestore();
+  //const auth = getAuth();
+ // const db = getFirestore();
 
   const validateInputs = () => {
     if (!firstName || firstName.length < 2) {
