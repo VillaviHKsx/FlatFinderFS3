@@ -15,6 +15,7 @@ function Register() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [age, setAge] = useState('');
+  const [birthDate, setBirthDate] = useState(''); // Nuevo estado para Birth Date
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
@@ -25,6 +26,10 @@ function Register() {
     if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return 'El email no es válido.';
     const numericAge = parseInt(age, 10);
     if (!age || isNaN(numericAge) || numericAge < 18 || numericAge > 120) return 'La edad debe estar entre 18 y 120 años.';
+    if (!birthDate) return 'La fecha de nacimiento es obligatoria.';
+    const today = new Date();
+    const enteredDate = new Date(birthDate);
+    if (enteredDate > today) return 'La fecha de nacimiento no puede ser en el futuro.';
     if (!password || password.length < 6 || !/[a-zA-Z]/.test(password) || !/\d/.test(password) || !/[^a-zA-Z\d]/.test(password)) {
       return 'La contraseña debe tener al menos 6 caracteres, incluyendo letras, números y un carácter especial.';
     }
@@ -55,6 +60,7 @@ function Register() {
         lastName,
         email,
         age: parseInt(age, 10),
+        birthDate, // Guardar Birth Date en Firestore
       });
 
       Swal.fire({
@@ -73,7 +79,7 @@ function Register() {
 
       Swal.fire({
         icon: 'error',
-        title: 'El usuario ya esta registrado',
+        title: 'Error al registrar',
         text: errorMessage,
       });
 
@@ -111,6 +117,16 @@ function Register() {
           <span className="p-float-label">
             <InputText id="age" type="number" value={age} onChange={(e) => setAge(e.target.value)} />
             <label htmlFor="age">Edad</label>
+          </span>
+        </div>
+        <div className="field">
+          <span className="p-float-label">
+            <InputText
+              id="birthDate"
+              type="date" // Tipo Date para seleccionar fecha
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+            />
           </span>
         </div>
         <div className="field">

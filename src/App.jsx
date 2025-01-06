@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Update from './pages/Update';
+import Newflat from './pages/Newflat';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';  // Tema
 import 'primereact/resources/primereact.min.css';                // Componentes
 import 'primeicons/primeicons.css';                             // Iconos
@@ -18,6 +19,7 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="profile" element={<Profile />} />
           <Route path="update" element={<Update />} />
+          <Route path="newflat" element={<Newflat />} />
         </Routes>
       </AuthProvider>
     </Router>
