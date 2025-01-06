@@ -249,7 +249,7 @@ const NewFlat = () => {
   };
 
   const handleCancel = () => {
-    navigate('/'); // Redirige a la página de inicio
+    navigate('/home'); // Redirige a la página de inicio
   };
 
   return (
@@ -349,10 +349,10 @@ const NewFlat = () => {
         </div>
 
         <div className="button-group">
-          <Button type="submit" label="Save" className="p-button-rounded p-button-success" />
+          <Button type="submit" label="Guardar" className="p-button-rounded p-button-success" />
           <Button
             type="button"
-            label="Cancel"
+            label="Cancelar"
             className="p-button-rounded p-button-outlined"
             onClick={handleCancel}
           />
