@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', true);
     localStorage.setItem('loginTime', Date.now());
-    navigate('/home');
+    navigate('/profile');
   };
 
   const logout = () => {
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoggedIn(false);
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('loginTime');
-    navigate('/login');
+    navigate('/');
   };
 
   useEffect(() => {
