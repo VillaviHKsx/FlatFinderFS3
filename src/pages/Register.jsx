@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { auth, db } from '../firebaseConfig';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import sha256 from 'crypto-js/sha256';
 import '../styles/register.css'; // Importamos los estilos
 
 function Register() {
