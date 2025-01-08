@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
@@ -10,9 +11,10 @@ import Header from '../components/Header';
 import '../styles/login.css';
 
 const Home = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, sessionTime } = useContext(AuthContext);
   const [flats, setFlats] = useState([]);
   const [filters, setFilters] = useState({ city: '', priceRange: [0, 10000], areaRange: [0, 500] });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFlats = async () => {
@@ -43,35 +45,43 @@ const Home = () => {
     );
   });
 
+
   return (
     <div>
-      <Header user={user} onLogout={logout} />
-      <div className="login-container">
-        <div className="p-grid">
-          <div className="p-col-12 p-md-4">
-            <InputText
-              placeholder="Filter by City"
-              value={filters.city}
-              onChange={(e) => handleFilterChange('city', e.target.value)}
-            />
-          </div>
-          <div className="p-col-12 p-md-4">
-            <InputNumber
-              placeholder="Min Price"
-              value={filters.priceRange[0]}
-              onValueChange={(e) => handleFilterChange('priceRange', [e.value, filters.priceRange[1]])}
-            />
-            <InputNumber
-              placeholder="Max Price"
-              value={filters.priceRange[1]}
-              onValueChange={(e) => handleFilterChange('priceRange', [filters.priceRange[0], e.value])}
-            />
-          </div>
+      <Header user={user} onLogout={logout}/>
+      <div className="home-container">
+        <h2>Available Flats</h2>
+        <div className="filters">
+          <InputText
+            value={filters.city}
+            onChange={(e) => handleFilterChange('city', e.target.value)}
+            placeholder="City"
+          />
+          <InputNumber
+            value={filters.priceRange[0]}
+            onValueChange={(e) => handleFilterChange('priceRange', [e.value, filters.priceRange[1]])}
+            placeholder="Min Price"
+          />
+          <InputNumber
+            value={filters.priceRange[1]}
+            onValueChange={(e) => handleFilterChange('priceRange', [filters.priceRange[0], e.value])}
+            placeholder="Max Price"
+          />
+          <InputNumber
+            value={filters.areaRange[0]}
+            onValueChange={(e) => handleFilterChange('areaRange', [e.value, filters.areaRange[1]])}
+            placeholder="Min Area"
+          />
+          <InputNumber
+            value={filters.areaRange[1]}
+            onValueChange={(e) => handleFilterChange('areaRange', [filters.areaRange[0], e.value])}
+            placeholder="Max Area"
+          />
         </div>
-        <DataTable value={filteredFlats} paginator rows={10} responsiveLayout="scroll">
-          <Column field="city" header="City" sortable />
-          <Column field="streetName" header="Street Name" />
-          <Column field="rentPrice" header="Rent Price" sortable />
+        <DataTable value={filteredFlats}>
+          <Column field="city" header="City" />
+          <Column field="rentPrice" header="Rent Price" />
+          <Column field="areaSize" header="Area Size" />
         </DataTable>
       </div>
     </div>

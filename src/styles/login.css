@@ -25,4 +25,17 @@
   
   .p-float-label {
     margin-bottom: 1.5rem;
+  } 
+
+  .session-timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  session-timer svg text {
+    fill: black;
+    font-size: 18px;
+    font-weight: bold;
   }  

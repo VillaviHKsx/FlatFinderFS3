@@ -1,0 +1,35 @@
+.header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    background-color: #f4f4f4;
+    padding: 20px;
+  }
+  
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 10px; /* Espacio entre el logo/texto y el menú */
+  }
+  
+  .company-logo {
+    width: 50px; /* Ajusta el tamaño del logo según sea necesario */
+    height: auto;
+    margin-right: 20px; /* Espacio entre el logo y el texto */
+  }
+  
+  .custom-menubar .p-menubar-root-list {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: nowrap; /* Evita que los elementos se envuelvan */
+  }
+  
+  .custom-menubar .p-menubar-root-list > .p-menuitem {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
