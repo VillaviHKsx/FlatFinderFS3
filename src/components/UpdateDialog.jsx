@@ -3,14 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
-import Header from '../components/Header';
 import '../styles/login.css';
 
-const Update = () => {
-  const { user, logout } = useContext(AuthContext);
+const UpdateDialog = ({ visible, onHide }) => {
+  const { user, updateUser } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -69,6 +69,14 @@ const Update = () => {
         password: formData.password // Asegúrate de manejar la encriptación de la contraseña en tu backend
       });
       alert('Profile updated successfully');
+      updateUser({
+        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        birthDate: formData.birthDate,
+      });
+      onHide();
       navigate('/home');
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -77,40 +85,36 @@ const Update = () => {
   };
 
   return (
-    <div>
-      <Header user={user} onLogout={logout} />
-      <div className="update-container">
-        <h2>Update Profile</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="p-field">
-            <label htmlFor="firstName">First Name</label>
-            <InputText id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} />
-          </div>
-          <div className="p-field">
-            <label htmlFor="lastName">Last Name</label>
-            <InputText id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} />
-          </div>
-          <div className="p-field">
-            <label htmlFor="email">Email</label>
-            <InputText id="email" name="email" value={formData.email} onChange={handleChange} />
-          </div>
-          <div className="p-field">
-            <label htmlFor="birthDate">Birth Date</label>
-            <InputText id="birthDate" name="birthDate" value={formData.birthDate} onChange={handleChange} />
-          </div>
-          <div className="p-field">
-            <label htmlFor="password">Password</label>
-            <Password id="password" name="password" value={formData.password} onChange={handleChange} />
-          </div>
-          <div className="p-field">
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <Password id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
-          </div>
-          <Button label="Update" icon="pi pi-check" type="submit" />
-        </form>
-      </div>
-    </div>
+    <Dialog header="Update Profile" visible={visible} style={{ width: '50vw' }} onHide={onHide}>
+      <form onSubmit={handleSubmit}>
+        <div className="p-field">
+          <label htmlFor="firstName">First Name: </label>
+          <InputText id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} />
+        </div>
+        <div className="p-field">
+          <label htmlFor="lastName">Last Name: </label>
+          <InputText id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} />
+        </div>
+        <div className="p-field">
+          <label htmlFor="email">Email: </label>
+          <InputText id="email" name="email" value={formData.email} onChange={handleChange} disabled />
+        </div>
+        <div className="p-field">
+          <label htmlFor="birthDate">Birth Date: </label>
+          <InputText id="birthDate" name="birthDate" value={formData.birthDate} onChange={handleChange} />
+        </div>
+        <div className="p-field">
+          <label htmlFor="password">Password: </label>
+          <Password id="password" name="password" value={formData.password} onChange={handleChange} disabled />
+        </div>
+        <div className="p-field">
+          <label htmlFor="confirmPassword">Confirm Password: </label>
+          <Password id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} disabled />
+        </div>
+        <Button label="Update" icon="pi pi-check" type="submit" />
+      </form>
+    </Dialog>
   );
 };
 
-export default Update;
+export default UpdateDialog;

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menubar } from 'primereact/menubar';
+import { AuthContext } from '../contexts/AuthContext';
 import '../styles/header.css';
 import logo from '../images/logo.png'; // Importa el logo
 
-const Header = ({ user, onLogout }) => {
+const Header = ({ onLogout }) => {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const items = [

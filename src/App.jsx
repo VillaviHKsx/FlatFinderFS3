@@ -5,6 +5,7 @@ import Login from './pages/Login';
   import Home from './pages/Home';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
+import AllUsers from './pages/AllUsers';
 import Update from './pages/Update';
 import Newflat from './pages/Newflat';
 import PrivateRoute from './components/PrivateRoute';
@@ -22,8 +23,9 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="home" element={<PrivateRoute><Home /></PrivateRoute>} />
           <Route path="profile" element={<Profile />} />
-          <Route path="update" element={<Update />} />
-          <Route path="newflat" element={<Newflat />} />
+          <Route path="all-users" element={<AllUsers />} />
+          <Route path="update/:userId" element={<Update />} />
+          <Route path="newflat" element={<PrivateRoute><Newflat /></PrivateRoute>} />
         </Routes>
       </AuthProvider>
     </Router>

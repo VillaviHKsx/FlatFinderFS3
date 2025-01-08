@@ -1,61 +1,71 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAuth } from 'firebase/auth';
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
-import '../styles/login.css'; // Reutilizamos login.css para estilos
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import Header from '../components/Header';
+import UpdateDialog from '../components/UpdateDialog';
+import '../styles/login.css';
 
-function Profile() {
-  const [user, setUser] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+const Profile = () => {
+  const { user, logout } = useContext(AuthContext);
+  const [profileData, setProfileData] = useState(null);
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
   const navigate = useNavigate();
-  const auth = getAuth();
+  const { userId } = useParams();
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const currentUser = auth.currentUser;
-
-      if (!currentUser) {
-        navigate('/'); // Redirigir al login si no hay usuario autenticado
-        return;
-      }
-
-      const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-      if (userDoc.exists()) {
-        setUser(userDoc.data());
-        setIsAdmin(userDoc.data().role === 'admin'); // Asumimos que hay un campo `role` en la base de datos
-      } else {
-        console.error('El documento del usuario no existe.');
+      try {
+        const userDoc = await getDoc(doc(db, 'users', userId || user.uid));
+        if (userDoc.exists()) {
+          setProfileData(userDoc.data());
+        } else {
+          console.error('User not found');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
       }
     };
 
     fetchUserData();
-  }, [auth, navigate]);
-
-  if (!user) {
-    return <p>Cargando...</p>;
-  }
+  }, [userId, user.uid]);
 
   const handleEdit = () => {
-    navigate('/update'); // Redirigir a la página de actualización del perfil
+    setIsDialogVisible(true);
   };
 
+  if (!profileData) {
+    return <p>Loading...</p>;
+  }
+
+  const isEditable = user.uid === (userId || user.uid) || user.role === 'admin';
+
   return (
-    <div className="profile-container">
-      <h1>Perfil de Usuario</h1>
-      <div className="profile-details">
-        <p><strong>Email:</strong> {user.email}</p>
-        <p><strong>Nombre:</strong> {user.firstName}</p>
-        <p><strong>Apellido:</strong> {user.lastName}</p>
-        <p><strong>Fecha de nacimiento:</strong> {user.birthDate}</p>
+    <div>
+      <Header user={user} onLogout={logout} />
+      <div className="profile-container">
+        <DataTable value={[profileData]}>
+          <Column field="firstName" header="First Name" />
+          <Column field="lastName" header="Last Name" />
+          <Column field="email" header="Email" />
+          <Column field="birthDate" header="Birth Date" />
+          {isEditable && (
+            <Column
+              header="Actions"
+              body={() => (
+                <Button label="Edit" icon="pi pi-pencil" onClick={handleEdit} />
+              )}
+            />
+          )}
+        </DataTable>
       </div>
-      {(auth.currentUser.uid === user.uid || isAdmin) && (
-        <button className="edit-button" onClick={handleEdit}>
-          Editar Perfil
-        </button>
-      )}
+      <UpdateDialog visible={isDialogVisible} onHide={() => setIsDialogVisible(false)} />
     </div>
   );
-}
+};
 
 export default Profile;
