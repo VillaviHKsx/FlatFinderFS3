@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
@@ -11,10 +11,10 @@ import Header from '../components/Header';
 import '../styles/login.css';
 
 const Home = () => {
-  const { user, logout, sessionTime } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const [flats, setFlats] = useState([]);
   const [filters, setFilters] = useState({ city: '', priceRange: [0, 10000], areaRange: [0, 500] });
-  const navigate = useNavigate();
+//  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFlats = async () => {
