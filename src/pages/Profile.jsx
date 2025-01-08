@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
@@ -7,14 +7,13 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import Header from '../components/Header';
-import UpdateDialog from '../components/UpdateDialog';
+import UpdateDialog from './UpdateDialog';
 import '../styles/login.css';
 
 const Profile = () => {
   const { user, logout } = useContext(AuthContext);
   const [profileData, setProfileData] = useState(null);
   const [isDialogVisible, setIsDialogVisible] = useState(false);
-  const navigate = useNavigate();
   const { userId } = useParams();
 
   useEffect(() => {
