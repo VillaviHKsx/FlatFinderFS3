@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
@@ -7,7 +7,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import Header from '../components/Header';
-import UpdateDialog from './UpdateDialog';
+import UpdateDialog from '../pages/UpdateDialog';
 import '../styles/login.css';
 
 const Profile = () => {
@@ -15,6 +15,7 @@ const Profile = () => {
   const [profileData, setProfileData] = useState(null);
   const [isDialogVisible, setIsDialogVisible] = useState(false);
   const { userId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {

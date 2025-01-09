@@ -5,7 +5,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
+import { SplitButton } from 'primereact/splitbutton';
 import Header from '../components/Header';
 import '../styles/login.css';
 
@@ -33,6 +33,25 @@ const AllUsers = () => {
     navigate(`/profile/${userId}`);
   };
 
+  const roleTemplate = (rowData) => {
+    return rowData.role === 'admin' ? 'Yes' : 'No';
+  };
+
+  const actionTemplate = (rowData) => {
+    const items = [
+      {
+        label: 'Profile',
+        icon: 'pi pi-user',
+        command: () => openUserProfile(rowData.id)
+      },
+      // Puedes agregar más acciones aquí si es necesario
+    ];
+
+    return (
+      <SplitButton label="Actions" model={items} className="p-button-primary" />
+    );
+  };
+
   if (user?.role !== 'admin') {
     return <p>Access denied. Only admins can view this page.</p>;
   }
@@ -41,18 +60,14 @@ const AllUsers = () => {
     <div>
       <Header user={user} onLogout={logout} />
       <div className="all-users-container">
-        <DataTable value={users} paginator rows={10} sortField="firstName" sortOrder={1}>
-          <Column field="firstName" header="First Name" sortable />
-          <Column field="lastName" header="Last Name" sortable />
-          <Column field="birthDate" header="Birth Date" sortable />
+        <DataTable value={users}>
+          <Column field="firstName" header="First Name" />
+          <Column field="lastName" header="Last Name" />
           <Column field="email" header="Email" />
-          <Column field="flatsCount" header="Flats Count" sortable />
-          <Column field="role" header="Is Admin" body={(rowData) => (rowData.role === 'admin' ? 'Yes' : 'No')} />
+          <Column field="role" header="Role" body={roleTemplate} />
           <Column
             header="Actions"
-            body={(rowData) => (
-              <Button label="Profile" icon="pi pi-user" onClick={() => openUserProfile(rowData.id)} />
-            )}
+            body={actionTemplate}
           />
         </DataTable>
       </div>

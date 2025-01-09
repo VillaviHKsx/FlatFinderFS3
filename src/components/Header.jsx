@@ -11,7 +11,7 @@ const Header = ({ onLogout }) => {
 
   const items = [
     { label: 'Home', icon: 'pi pi-fw pi-home', command: () => navigate('/home') },
-    { label: 'My Profile', icon: 'pi pi-fw pi-user', command: () => navigate('/profile') },
+    { label: 'My Profile', icon: 'pi pi-fw pi-user', command: () => navigate(`/profile/${user.uid}`) },
     { label: 'My Flats', icon: 'pi pi-fw pi-building', command: () => navigate('/my-flats') },
     { label: 'Favourites', icon: 'pi pi-fw pi-star', command: () => navigate('/favourites') },
     ...(user?.role === 'admin' ? [{ label: 'All Users', icon: 'pi pi-fw pi-users', command: () => navigate('/all-users') }] : []),

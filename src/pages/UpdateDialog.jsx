@@ -7,6 +7,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
+import Swal from 'sweetalert2';
 import '../styles/login.css';
 
 const UpdateDialog = ({ visible, onHide }) => {
@@ -54,33 +55,62 @@ const UpdateDialog = ({ visible, onHide }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
 
-    try {
-      const userDoc = doc(db, 'users', userId || user.uid);
-      await updateDoc(userDoc, {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        birthDate: formData.birthDate,
-        password: formData.password // Asegúrate de manejar la encriptación de la contraseña en tu backend
+    // Obtener la contraseña actual del usuario desde Firestore
+    const userDoc = await getDoc(doc(db, 'users', userId || user.uid));
+    if (userDoc.exists()) {
+      const data = userDoc.data();
+      const storedPassword = data.password;
+
+      if (formData.confirmPassword !== storedPassword) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'The password does not match the current password',
+          backdrop: true, // Asegura que el mensaje se muestre encima del popup
+        });
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, 'users', userId || user.uid), {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          birthDate: formData.birthDate,
+        });
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Profile updated successfully',
+          backdrop: true, // Asegura que el mensaje se muestre encima del popup
+        });
+        updateUser({
+          fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          birthDate: formData.birthDate,
+        });
+        onHide();
+        navigate('/home');
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error updating profile',
+          backdrop: true, // Asegura que el mensaje se muestre encima del popup
+        });
+      }
+    } else {
+      console.error('User not found');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'User not found',
+        backdrop: true, // Asegura que el mensaje se muestre encima del popup
       });
-      alert('Profile updated successfully');
-      updateUser({
-        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        birthDate: formData.birthDate,
-      });
-      onHide();
-      navigate('/home');
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      alert('Error updating profile');
     }
   };
 
@@ -109,7 +139,7 @@ const UpdateDialog = ({ visible, onHide }) => {
         </div>
         <div className="p-field">
           <label htmlFor="confirmPassword">Confirm Password: </label>
-          <Password id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} disabled />
+          <Password id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
         </div>
         <Button label="Update" icon="pi pi-check" type="submit" />
       </form>

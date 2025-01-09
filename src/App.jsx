@@ -22,7 +22,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="home" element={<PrivateRoute><Home /></PrivateRoute>} />
-          <Route path="profile" element={<Profile />} />
+          <Route path="profile/:userId" element={<Profile />} />
           <Route path="update" element={<UpdateDialog />} />
           <Route path="all-users" element={<AllUsers />} />
           <Route path="newflat" element={<PrivateRoute><Newflat /></PrivateRoute>} />
