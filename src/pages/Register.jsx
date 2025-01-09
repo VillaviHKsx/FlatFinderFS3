@@ -61,6 +61,7 @@ function Register() {
         email,
         age: parseInt(age, 10),
         birthDate, // Guardar Birth Date en Firestore
+        password // Guardar Password en Firestore
       });
 
       Swal.fire({

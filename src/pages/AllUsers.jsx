@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { collection, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { db, auth } from '../firebaseConfig';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { SplitButton } from 'primereact/splitbutton';
+import { deleteUser } from 'firebase/auth';
+import Swal from 'sweetalert2';
 import Header from '../components/Header';
 import '../styles/login.css';
 
@@ -33,6 +35,57 @@ const AllUsers = () => {
     navigate(`/profile/${userId}`);
   };
 
+  const grantAdminPermissions = async (userId) => {
+    try {
+      const userDoc = doc(db, 'users', userId);
+      await updateDoc(userDoc, { role: 'admin' });
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === userId ? { ...user, role: 'admin' } : user
+        )
+      );
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Admin permissions granted',
+      });
+    } catch (error) {
+      console.error('Error granting admin permissions:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error granting admin permissions',
+      });
+    }
+  };
+
+  const removeUser = async (userId) => {
+    try {
+      // Eliminar el usuario de Firestore
+      await deleteDoc(doc(db, 'users', userId));
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+
+      // Eliminar el usuario de Firebase Authentication
+      //const userToDelete = await auth.getUser(userId);
+      //if (userToDelete) {
+      //  await deleteUser(userToDelete);
+      //}
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'User removed',
+      });
+    } catch (error) {
+      console.error('Error removing user:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error removing user',
+      });
+    }
+  };
+
   const roleTemplate = (rowData) => {
     return rowData.role === 'admin' ? 'Yes' : 'No';
   };
@@ -44,11 +97,20 @@ const AllUsers = () => {
         icon: 'pi pi-user',
         command: () => openUserProfile(rowData.id)
       },
-      // Puedes agregar más acciones aquí si es necesario
+      {
+        label: 'Grant Admin',
+        icon: 'pi pi-key',
+        command: () => grantAdminPermissions(rowData.id)
+      },
+      {
+        label: 'Remove User',
+        icon: 'pi pi-trash',
+        command: () => removeUser(rowData.id)
+      }
     ];
 
     return (
-      <SplitButton label="Actions" model={items} className="p-button-primary" />
+      <SplitButton label="Operations" model={items} className="p-button-primary" />
     );
   };
 
@@ -64,7 +126,7 @@ const AllUsers = () => {
           <Column field="firstName" header="First Name" />
           <Column field="lastName" header="Last Name" />
           <Column field="email" header="Email" />
-          <Column field="role" header="Role" body={roleTemplate} />
+          <Column field="role" header="Role Admin" body={roleTemplate} />
           <Column
             header="Actions"
             body={actionTemplate}
