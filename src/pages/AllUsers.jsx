@@ -2,11 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { collection, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db, auth } from '../firebaseConfig';
+import { db } from '../firebaseConfig';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { SplitButton } from 'primereact/splitbutton';
-import { deleteUser } from 'firebase/auth';
 import Swal from 'sweetalert2';
 import Header from '../components/Header';
 import '../styles/login.css';
@@ -110,7 +109,7 @@ const AllUsers = () => {
     ];
 
     return (
-      <SplitButton label="Operations" model={items} className="p-button-primary" />
+      <SplitButton label="" icon="pi pi-cog" model={items} className="p-button-primary" />
     );
   };
 

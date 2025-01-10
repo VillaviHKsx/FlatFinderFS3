@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import UpdateDialog from './pages/UpdateDialog';
 import AllUsers from './pages/AllUsers';
+import MyFlats from './pages/MyFlats';
 import Newflat from './pages/Newflat';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="profile/:userId" element={<Profile />} />
           <Route path="update" element={<UpdateDialog />} />
           <Route path="all-users" element={<AllUsers />} />
+          <Route path="my-flats" element={<MyFlats />} />
           <Route path="newflat" element={<PrivateRoute><Newflat /></PrivateRoute>} />
         </Routes>
       </AuthProvider>
