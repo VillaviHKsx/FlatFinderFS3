@@ -9,11 +9,13 @@ import { SplitButton } from 'primereact/splitbutton';
 import { Button } from 'primereact/button';
 import Swal from 'sweetalert2';
 import Header from '../components/Header';
+import Newflat from '../pages/Newflat';
 import '../styles/login.css';
 
 const MyFlats = () => {
   const { user, logout } = useContext(AuthContext);
   const [flats, setFlats] = useState([]);
+  const [newFlatDialogVisible, setNewFlatDialogVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -93,7 +95,7 @@ const MyFlats = () => {
     ];
 
     return (
-      <SplitButton label="Actions" icon="pi pi-cog" model={items} className="p-button-primary" />
+      <SplitButton icon="pi pi-cog" model={items} className="p-button-primary" />
     );
   };
 
@@ -102,7 +104,7 @@ const MyFlats = () => {
       <Header user={user} onLogout={logout} />
       <div className="my-flats-container">
         <div className="button-container">
-          <Button label="New Flat" icon="pi pi-plus" onClick={() => navigate('/new-flat')} className="p-button-success" />
+          <Button label="New Flat" icon="pi pi-plus" onClick={() => setNewFlatDialogVisible(true)} className="p-button-success" />
         </div>
         <DataTable value={flats}>
           <Column field="city" header="City" />
@@ -113,14 +115,12 @@ const MyFlats = () => {
           <Column field="yearBuilt" header="Year Built" />
           <Column field="rentPrice" header="Rent Price" />
           <Column field="dateAvailable" header="Date Available" body={(rowData) => formatDate(rowData.dateAvailable)} />
-          <Column header="Actions" body={(rowData) => (
-            <SplitButton icon="pi pi-cog" model={[ ...actionTemplate(rowData).props.model]} className="p-button-primary" />
-          )} />
+          <Column header="Actions" body={actionTemplate} />
         </DataTable>
       </div>
+      <Newflat visible={newFlatDialogVisible} onHide={() => setNewFlatDialogVisible(false)} />
     </div>
   );
 };
 
 export default MyFlats;
-

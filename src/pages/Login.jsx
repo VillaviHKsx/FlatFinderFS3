@@ -76,7 +76,7 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h1>Iniciar Sesión</h1>
+      <h1>FlatFinder FS3</h1>
       <form onSubmit={handleSubmit} className="login-form">
         <LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} />
         <LoginButtons />

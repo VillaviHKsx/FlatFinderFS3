@@ -27,7 +27,7 @@ function App() {
           <Route path="update" element={<UpdateDialog />} />
           <Route path="all-users" element={<AllUsers />} />
           <Route path="my-flats" element={<MyFlats />} />
-          <Route path="newflat" element={<PrivateRoute><Newflat /></PrivateRoute>} />
+          <Route path="new-flat" element={<Newflat />} />
         </Routes>
       </AuthProvider>
     </Router>
