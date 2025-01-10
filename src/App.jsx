@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import NewFlat from './pages/NewFlat';
 import AllFlats from './pages/AllFlats';
+import UpdateProfile from './pages/UpdateProfile';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="home" element={<Home />} />
           <Route path='newflat' element={<NewFlat />} />
           <Route path="allflats" element={<AllFlats />} />
+          <Route path="updateprofile" element={<UpdateProfile />} />
         </Routes>
       </AuthProvider>
     </Router>
