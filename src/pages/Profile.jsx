@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
@@ -15,7 +15,6 @@ const Profile = () => {
   const [profileData, setProfileData] = useState(null);
   const [isDialogVisible, setIsDialogVisible] = useState(false);
   const { userId } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
