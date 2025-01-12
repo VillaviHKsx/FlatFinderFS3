@@ -1,20 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+/*import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
+import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { InputSwitch } from 'primereact/inputswitch';
 import Header from '../components/Header';
 import '../styles/login.css';
 
 const Home = () => {
   const [flats, setFlats] = useState([]);
+  const { user, logout } = useContext(AuthContext);
+  const [setUsers] = useState([]);
 
   useEffect(() => {
-    const fetchFlats = async () => {
+    const fetchFlatsAndUsers = async () => {
       try {
         const flatsCollection = collection(db, 'flats');
-        const snapshot = await getDocs(flatsCollection);
-        const data = snapshot.docs.map((doc) => {
+        const usersCollection = collection(db, 'users');
+
+        const [flatsSnapshot, usersSnapshot] = await Promise.all([
+          getDocs(flatsCollection),
+          getDocs(usersCollection)
+        ]);
+
+        const flatsData = flatsSnapshot.docs.map((doc) => {
           const flatData = doc.data();
           // Convertir dateAvailable a un objeto Date si es necesario
           if (flatData.dateAvailable && flatData.dateAvailable.seconds) {
@@ -22,13 +32,31 @@ const Home = () => {
           }
           return { id: doc.id, ...flatData };
         });
-        setFlats(data);
+
+        const usersData = usersSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+
+        // Combinar los datos de los flats con los datos de los usuarios
+        const combinedData = flatsData.map((flat) => {
+          const owner = usersData.find((user) => user.id === flat.ownerId);
+          return {
+            ...flat,
+            ownerName: owner ? `${owner.firstName} ${owner.lastName}` : 'Unknown',
+            ownerEmail: owner ? owner.email : 'Unknown',
+            isFavorite: flat.isFavorite || false
+          };
+        });
+
+        setFlats(combinedData);
+        setUsers(usersData);
       } catch (error) {
-        console.error('Error fetching flats:', error);
+        console.error('Error fetching flats and users:', error);
       }
     };
 
-    fetchFlats();
+    fetchFlatsAndUsers();
   }, []);
 
   const formatDate = (date) => {
@@ -39,9 +67,39 @@ const Home = () => {
     return new Date(date.seconds * 1000).toLocaleDateString();
   };
 
+  const handleFavoriteChange = async (flat, value) => {
+    try {
+      const flatDoc = doc(db, 'flats', flat.id);
+      await setDoc(flatDoc, { ...flat, isFavorite: value }, { merge: true });
+      setFlats((prevFlats) =>
+        prevFlats.map((f) =>
+          f.id === flat.id ? { ...f, isFavorite: value } : f
+        )
+      );
+
+      const flatFavoriteDoc = doc(db, `flatfavorite/${user.uid}_${flat.id}`);
+      if (value) {
+        await setDoc(flatFavoriteDoc, { ...flat, userId: user.uid });
+      } else {
+        await deleteDoc(flatFavoriteDoc);
+      }
+    } catch (error) {
+      console.error('Error updating favorite status:', error);
+    }
+  };
+
+  const favoriteTemplate = (rowData) => {
+    return (
+      <InputSwitch
+        checked={rowData.isFavorite}
+        onChange={(e) => handleFavoriteChange(rowData, e.value)}
+      />
+    );
+  };
+
   return (
     <div>
-      <Header />
+      <Header user={user} onLogout={logout} />
       <div className="home-container">
         <DataTable value={flats}>
           <Column field="city" header="City" />
@@ -52,6 +110,128 @@ const Home = () => {
           <Column field="yearBuilt" header="Year Built" />
           <Column field="rentPrice" header="Rent Price" />
           <Column field="dateAvailable" header="Date Available" body={(rowData) => formatDate(rowData.dateAvailable)} />
+          <Column field="ownerName" header="Owner Full Name" />
+          <Column field="ownerEmail" header="Owner Email" />
+          <Column header="Favorite" body={favoriteTemplate} />
+        </DataTable>
+      </div>
+    </div>
+  );
+};
+
+export default Home; */
+
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
+import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { InputSwitch } from 'primereact/inputswitch';
+import Header from '../components/Header';
+import '../styles/login.css';
+
+const Home = () => {
+  const [flats, setFlats] = useState([]);
+  const { user, logout } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchFlatsAndFavorites = async () => {
+      try {
+        const flatsCollection = collection(db, 'flats');
+        const flatsSnapshot = await getDocs(flatsCollection);
+
+        const flatsData = flatsSnapshot.docs.map((doc) => {
+          const flatData = doc.data();
+          // Convertir dateAvailable a un objeto Date si es necesario
+          if (flatData.dateAvailable && flatData.dateAvailable.seconds) {
+            flatData.dateAvailable = new Date(flatData.dateAvailable.seconds * 1000);
+          }
+          return { id: doc.id, ...flatData };
+        });
+
+        // Obtener los favoritos del usuario actual
+        const userFavoritesCollection = collection(db, `flatfavorite`);
+        const userFavoritesSnapshot = await getDocs(userFavoritesCollection);
+        const userFavoritesData = userFavoritesSnapshot.docs.reduce((acc, doc) => {
+          const favoriteData = doc.data();
+          if (favoriteData.userId === user.uid) {
+            acc[favoriteData.id] = true;
+          }
+          return acc;
+        }, {});
+
+        // Combinar los datos de los flats con los datos de los favoritos del usuario
+        const combinedData = flatsData.map((flat) => ({
+          ...flat,
+          isFavorite: userFavoritesData[flat.id] || false
+        }));
+
+        setFlats(combinedData);
+      } catch (error) {
+        console.error('Error fetching flats and favorites:', error);
+      }
+    };
+
+    if (user) {
+      fetchFlatsAndFavorites();
+    }
+  }, [user]);
+
+  const formatDate = (date) => {
+    if (!date) return '';
+    if (date instanceof Date) {
+      return date.toLocaleDateString();
+    }
+    return new Date(date.seconds * 1000).toLocaleDateString();
+  };
+
+  const handleFavoriteChange = async (flat, value) => {
+    try {
+      const flatDoc = doc(db, 'flats', flat.id);
+      await setDoc(flatDoc, { ...flat, isFavorite: value }, { merge: true });
+      setFlats((prevFlats) =>
+        prevFlats.map((f) =>
+          f.id === flat.id ? { ...f, isFavorite: value } : f
+        )
+      );
+
+      const flatFavoriteDoc = doc(db, `flatfavorite/${user.uid}_${flat.id}`);
+      if (value) {
+        await setDoc(flatFavoriteDoc, { ...flat, userId: user.uid });
+      } else {
+        await deleteDoc(flatFavoriteDoc);
+      }
+    } catch (error) {
+      console.error('Error updating favorite status:', error);
+    }
+  };
+
+  const favoriteTemplate = (rowData) => {
+    return (
+      <InputSwitch
+        checked={rowData.isFavorite}
+        onChange={(e) => handleFavoriteChange(rowData, e.value)}
+      />
+    );
+  };
+
+  return (
+    <div>
+      <Header user={user} onLogout={logout} />
+      <div className="home-container">
+        <DataTable value={flats}>
+          <Column field="city" header="City" />
+          <Column field="streetName" header="Street Name" />
+          <Column field="streetNumber" header="Street Number" />
+          <Column field="areaSize" header="Area Size" />
+          <Column field="hasAC" header="Has AC" body={(rowData) => (rowData.hasAC ? 'Yes' : 'No')} />
+          <Column field="yearBuilt" header="Year Built" />
+          <Column field="rentPrice" header="Rent Price" />
+          <Column field="dateAvailable" header="Date Available" body={(rowData) => formatDate(rowData.dateAvailable)} />
+          <Column field="ownerName" header="Owner Full Name" />
+          <Column field="ownerEmail" header="Owner Email" />
+          <Column header="Favorite" body={favoriteTemplate} />
         </DataTable>
       </div>
     </div>
