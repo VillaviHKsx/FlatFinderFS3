@@ -62,7 +62,7 @@ const NewFlat = ({ visible, onHide, onNewFlat }) => {
 
       onNewFlat(newFlat);
       onHide();
-      navigate('/my-flats');
+      navigate('/home');
     } catch (error) {
       console.error('Error creating flat:', error);
       Swal.fire({

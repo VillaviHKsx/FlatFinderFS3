@@ -9,7 +9,9 @@ import UpdateDialog from './pages/UpdateDialog';
 import AllUsers from './pages/AllUsers';
 import MyFlats from './pages/MyFlats';
 import Newflat from './pages/Newflat';
+import Viewflat from './pages/Viewflat';
 import Favourites from './pages/Favourites';
+
 import PrivateRoute from './components/PrivateRoute';
 
 import 'primereact/resources/themes/lara-light-indigo/theme.css';  // Tema
@@ -29,6 +31,7 @@ function App() {
           <Route path="all-users" element={<AllUsers />} />
           <Route path="my-flats" element={<MyFlats />} />
           <Route path="new-flat" element={<Newflat />} />
+          <Route path="view-flat/:flatId" element={<Viewflat />} />
           <Route path="favourites" element={<Favourites />} />
         </Routes>
       </AuthProvider>
