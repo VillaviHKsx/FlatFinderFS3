@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-import { doc, getDoc, collection, addDoc, Timestamp } from 'firebase/firestore';
+import { doc, getDoc, collection, addDoc, getDocs, query, where, Timestamp } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -9,6 +9,9 @@ import { Button } from 'primereact/button';
 import { SplitButton } from 'primereact/splitbutton';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Toast } from 'primereact/toast';
+import { Fieldset } from 'primereact/fieldset';
+import { Avatar } from 'primereact/avatar';
+import { Dialog } from 'primereact/dialog';
 import Header from '../components/Header';
 import '../styles/login.css';
 
@@ -19,7 +22,9 @@ const ViewFlat = () => {
   const [flat, setFlat] = useState(null);
   const [owner, setOwner] = useState(null);
   const [message, setMessage] = useState('');
-  const toast = React.useRef(null);
+  const [messages, setMessages] = useState([]);
+  const [showMessagesDialog, setShowMessagesDialog] = useState(false);
+  const toast = useRef(null);
 
   useEffect(() => {
     const fetchFlat = async () => {
@@ -67,6 +72,7 @@ const ViewFlat = () => {
         senderId: user.uid,
         senderName: `${user.firstName} ${user.lastName}`,
         senderEmail: user.email,
+        senderAvatar: user.avatarUrl, // Assuming avatarUrl is stored in user context
         content: message,
         timestamp: Timestamp.now()
       });
@@ -78,20 +84,30 @@ const ViewFlat = () => {
     }
   };
 
-  const openFlatPage = (flatId) => {
-    navigate(`/view-flat/${flatId}`);
+  const fetchMessages = async () => {
+    try {
+      const messagesCollection = collection(db, 'messages');
+      const q = query(messagesCollection, where('flatId', '==', flatId));
+      const messagesSnapshot = await getDocs(q);
+      const messagesData = messagesSnapshot.docs.map((doc) => doc.data());
+      if (messagesData.length > 0) {
+        setMessages(messagesData);
+        setShowMessagesDialog(true);
+      } else {
+        toast.current.show({ severity: 'info', summary: 'No Messages', detail: 'There are no messages for this flat.', life: 3000 });
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error fetching messages', life: 3000 });
+    }
   };
 
   const editFlat = (flatId) => {
     navigate(`/edit-flat/${flatId}`);
   };
 
-  const deleteFlat = async (flatId) => {
-    // Implement delete functionality here
-  };
-
   const actionTemplate = (rowData) => {
-    const items = [  
+    const items = [
       {
         label: 'Edit',
         icon: 'pi pi-pencil',
@@ -100,12 +116,21 @@ const ViewFlat = () => {
       {
         label: 'Messages',
         icon: 'pi pi-envelope',
-        command: () => openFlatPage(rowData.id)
-      }
+        command: fetchMessages
+      },
     ];
 
     return (
       <SplitButton icon="pi pi-cog" model={items} className="p-button-primary" />
+    );
+  };
+
+  const legendTemplate = (message) => {
+    return (
+      <div className="flex align-items-center gap-2 px-2">
+        <Avatar image={message.senderAvatar || '/images/avatar/default.png'} shape="circle" />
+        <span className="font-bold">{message.senderName}</span>
+      </div>
     );
   };
 
@@ -144,6 +169,19 @@ const ViewFlat = () => {
             <Button label="Send Message" icon="pi pi-send" className="p-button-primary" onClick={sendMessage} />
           </div>
         )}
+        <Dialog header="Messages" visible={showMessagesDialog} style={{ width: '50vw' }} onHide={() => setShowMessagesDialog(false)}>
+          {messages.length > 0 && (
+            <div className="messages-container">
+              {messages.map((msg, index) => (
+                <Fieldset key={index} legend={legendTemplate(msg)}>
+                  <p><strong>Email:</strong> {msg.senderEmail}</p>
+                  <p><strong>Message:</strong> {msg.content}</p>
+                  <p><strong>Timestamp:</strong> {formatDate(msg.timestamp)}</p>
+                </Fieldset>
+              ))}
+            </div>
+          )}
+        </Dialog>
         <Toast ref={toast} />
       </div>
     </div>
