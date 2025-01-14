@@ -111,7 +111,7 @@ const MyFlats = () => {
       <Header user={user} onLogout={logout} />
       <div className="my-flats-container">
         <div className="button-container">
-          <Button label="New Flat" icon="pi pi-plus" onClick={() => setNewFlatDialogVisible(true)} className="p-button-success" />
+          <Button label="New Flat" icon="pi pi-plus" onClick={() => setNewFlatDialogVisible(true)} className="p-button-primary" />
         </div>
         <DataTable value={flats}>
           <Column field="city" header="City" />

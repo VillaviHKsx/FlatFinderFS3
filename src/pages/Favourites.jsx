@@ -62,7 +62,7 @@ const Favourites = () => {
       <Button
         label="Remove"
         icon="pi pi-times"
-        className="p-button-danger"
+        className="p-button-primary"
         onClick={() => handleRemoveFavorite(rowData.id)}
       />
     );
