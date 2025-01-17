@@ -9,6 +9,7 @@ import UpdateDialog from './pages/UpdateDialog';
 import AllUsers from './pages/AllUsers';
 import MyFlats from './pages/MyFlats';
 import Newflat from './pages/Newflat';
+import Editflat from './pages/Editflat';
 import Viewflat from './pages/Viewflat';
 import Favourites from './pages/Favourites';
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="my-flats" element={<MyFlats />} />
           <Route path="new-flat" element={<Newflat />} />
           <Route path="view-flat/:flatId" element={<Viewflat />} />
+          <Route path="edit-flat/:flatId" element={<Editflat />} />
           <Route path="favourites" element={<Favourites />} />
         </Routes>
       </AuthProvider>

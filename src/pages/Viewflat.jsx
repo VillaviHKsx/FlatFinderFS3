@@ -72,7 +72,7 @@ const ViewFlat = () => {
         senderId: user.uid,
         senderName: `${user.firstName} ${user.lastName}`,
         senderEmail: user.email,
-        senderAvatar: user.avatarUrl, // Assuming avatarUrl is stored in user context
+        senderAvatar: user.avatarUrl || '', // Assuming avatarUrl is stored in user context
         content: message,
         timestamp: Timestamp.now()
       });

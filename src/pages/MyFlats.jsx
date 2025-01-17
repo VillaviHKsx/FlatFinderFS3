@@ -10,12 +10,15 @@ import { Button } from 'primereact/button';
 import Swal from 'sweetalert2';
 import Header from '../components/Header';
 import Newflat from './Newflat';
+import EditFlat from './Editflat';
 import '../styles/login.css';
 
 const MyFlats = () => {
   const { user, logout } = useContext(AuthContext);
   const [flats, setFlats] = useState([]);
   const [newFlatDialogVisible, setNewFlatDialogVisible] = useState(false);
+  const [editFlatDialogVisible, setEditFlatDialogVisible] = useState(false);
+  const [selectedFlatId, setSelectedFlatId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,20 +47,21 @@ const MyFlats = () => {
   }, [user]);
 
   const openFlatPage = (flatId) => {
-    navigate(`/flat/${flatId}`);
+    navigate(`/view-flat/${flatId}`);
   };
 
   const editFlat = (flatId) => {
-    navigate(`/edit-flat/${flatId}`);
+    setSelectedFlatId(flatId);
+    setEditFlatDialogVisible(true);
   };
 
   const deleteFlat = async (flatId) => {
     try {
       await deleteDoc(doc(db, 'flats', flatId));
-      setFlats((prevFlats) => prevFlats.filter((flat) => flat.id !== flatId));
+      setFlats(flats.filter((flat) => flat.id !== flatId));
       Swal.fire({
         icon: 'success',
-        title: 'Success',
+        title: 'Deleted',
         text: 'Flat deleted successfully',
       });
     } catch (error) {
@@ -77,6 +81,7 @@ const MyFlats = () => {
     }
     return new Date(date.seconds * 1000).toLocaleDateString();
   };
+
 
   const actionTemplate = (rowData) => {
     const items = [
@@ -126,6 +131,9 @@ const MyFlats = () => {
         </DataTable>
       </div>
       <Newflat visible={newFlatDialogVisible} onHide={() => setNewFlatDialogVisible(false)} onNewFlat={handleNewFlat} />
+      {selectedFlatId && (
+        <EditFlat visible={editFlatDialogVisible} onHide={() => setEditFlatDialogVisible(false)} flatId={selectedFlatId} />
+      )}
     </div>
   );
 };
