@@ -6,6 +6,7 @@ import { auth, db } from '../firebaseConfig';
 import LoginForm from '../components/LoginForm';
 import LoginButtons from '../components/LoginButtons';
 import Swal from 'sweetalert2';
+import '../styles/login.css'; // Importamos el archivo CSS
 
 function Login() {
   const { login } = useContext(AuthContext);
@@ -74,14 +75,14 @@ function Login() {
   };
 
   return (
-    <div>
-      <h1>Iniciar Sesión</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="login-container">
+      <h1>FlatFinder FS3</h1>
+      <form onSubmit={handleSubmit} className="login-form">
         <LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} />
         <LoginButtons />
       </form>
     </div>
   );
-}
+};
 
 export default Login;
