@@ -9,7 +9,8 @@ import { SplitButton } from 'primereact/splitbutton';
 import { Button } from 'primereact/button';
 import Swal from 'sweetalert2';
 import Header from '../components/Header';
-import Newflat from './Newflat';
+import NewFlat from './NewFlat';  // Asegúrate de que el nombre sea el correcto
+
 import '../styles/login.css';
 
 const MyFlats = () => {
@@ -125,7 +126,7 @@ const MyFlats = () => {
           <Column header="Actions" body={actionTemplate} />
         </DataTable>
       </div>
-      <Newflat visible={newFlatDialogVisible} onHide={() => setNewFlatDialogVisible(false)} onNewFlat={handleNewFlat} />
+      <NewFlat visible={newFlatDialogVisible} onHide={() => setNewFlatDialogVisible(false)} onNewFlat={handleNewFlat} />
     </div>
   );
 };
