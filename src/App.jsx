@@ -8,7 +8,7 @@ import Profile from './pages/Profile';
 import UpdateDialog from './pages/UpdateDialog';
 import AllUsers from './pages/AllUsers';
 import MyFlats from './pages/MyFlats';
-import NewFlat from './pages/NewFlat';  // Si el archivo está en src/pages/
+import Newflat from './pages/Newflat';  
 import Viewflat from './pages/Viewflat';
 import Favourites from './pages/Favourites';
 import UpdateProfile from './pages/UpdateProfile.jsx';
@@ -29,7 +29,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="home" element={<Home />} />
-          <Route path='newflat' element={<NewFlat />} />
+          <Route path='newflat' element={<Newflat />} />
           <Route path="updateprofile" element={<UpdateProfile />} />
           <Route path="home" element={<PrivateRoute><Home /></PrivateRoute>} />
           <Route path="profile/:userId" element={<Profile />} />
