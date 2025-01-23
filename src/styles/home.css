@@ -1,0 +1,96 @@
+/* Estilos generales */
+.home-container {
+    padding: 20px;
+    background-color: #f4f4f4;
+  }
+  
+  .p-datatable {
+    width: 100%;
+  }
+  
+  .p-datatable thead th {
+    text-align: center;
+  }
+  
+  .p-datatable .p-datatable-tbody > tr > td {
+    text-align: center;
+  }
+  
+  .p-datatable .p-datatable-tbody > tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .p-button-primary {
+    width: 100%; /* Hacer el botón 'Open' más grande en pantallas pequeñas */
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 768px) {
+    .home-container {
+      padding: 10px;
+    }
+  
+    .p-datatable {
+      font-size: 0.9rem; /* Reducir el tamaño de la fuente en pantallas pequeñas */
+    }
+  
+    .p-datatable .p-datatable-tbody > tr > td {
+      padding: 8px; /* Reducir el espacio en las celdas */
+    }
+  
+    .p-button-primary {
+      width: auto; /* Restablecer el ancho del botón 'Open' a su tamaño original */
+    }
+  
+    .p-datatable .p-datatable-tbody > tr > td,
+    .p-datatable thead th {
+      font-size: 0.85rem; /* Ajustar el tamaño de la fuente de las celdas y cabeceras */
+    }
+  
+    .p-datatable .p-datatable-tbody > tr > td p {
+      margin: 0;
+    }
+  
+    .p-datatable .p-datatable-tbody .p-datatable-row {
+      display: block;
+      margin-bottom: 15px;
+    }
+  
+    .p-datatable .p-datatable-tbody .p-datatable-row > td {
+      display: flex;
+      justify-content: space-between;
+    }
+  
+    .p-datatable .p-datatable-tbody .p-datatable-row > td .p-column-title {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+  
+    .p-datatable .p-datatable-tbody > tr:hover {
+      background-color: transparent;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .home-container {
+      padding: 5px;
+    }
+  
+    .p-datatable .p-datatable-tbody .p-datatable-row {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .p-datatable .p-datatable-tbody .p-datatable-row > td {
+      font-size: 0.8rem; /* Reducir aún más el tamaño de la fuente */
+    }
+
+    .p-button-primary {
+      padding: 8px 16px; /* Asegurarse de que los botones sean cómodos en pantallas más pequeñas */
+    }
+
+    .p-datatable .p-datatable-tbody > tr > td {
+      padding: 5px; /* Reducir el padding en las celdas */
+    }
+  }
+  
