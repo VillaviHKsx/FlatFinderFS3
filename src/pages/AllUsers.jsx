@@ -131,6 +131,10 @@ const AllUsers = () => {
     );
   };
 
+  const avatarTemplate = (rowData) => {
+    return <img src={rowData.avatarUrl} alt="Avatar" className="user-avatar" />;
+  };
+
   if (user?.role !== 'admin') {
     return <p>Access denied. Only admins can view this page.</p>;
   }
@@ -140,16 +144,14 @@ const AllUsers = () => {
       <Header user={user} onLogout={logout} />
       <div className="all-users-container">
         <DataTable value={users}>
+          <Column header="Avatar" body={avatarTemplate} />
           <Column field="firstName" header="First Name" />
           <Column field="lastName" header="Last Name" />
           <Column field="email" header="Email" />
           <Column field="birthDate" header="Birth Date" />
           <Column field="flatsCount" header="Number of Flats" />
           <Column field="role" header="Role Admin" body={roleTemplate} />
-          <Column
-            header="Actions"
-            body={actionTemplate}
-          />
+          <Column header="Actions" body={actionTemplate} />
         </DataTable>
       </div>
     </div>

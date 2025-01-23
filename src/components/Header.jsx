@@ -24,6 +24,7 @@ const Header = ({ onLogout }) => {
       <div className="header-top">
         <img src={logo} alt="Company Logo" className="company-logo" />
         <p>Hello, {user?.fullName || 'User'}</p>
+        {user?.avatarUrl && <img src={user.avatarUrl} alt="User Avatar" className="user-avatar" />}
       </div>
       <Menubar model={items} className="custom-menubar" />
     </div>

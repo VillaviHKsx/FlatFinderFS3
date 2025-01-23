@@ -20,6 +20,21 @@
     height: auto;
     margin-right: 20px; /* Espacio entre el logo y el texto */
   }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-info p {
+    margin-right: 10px;
+  }
+  
+  .user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
   
   .custom-menubar .p-menubar-root-list {
     display: flex;

@@ -24,6 +24,7 @@ const ViewFlat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [showMessagesDialog, setShowMessagesDialog] = useState(false);
+  const [showMessageDialog, setShowMessageDialog] = useState(false);
   const toast = useRef(null);
 
   useEffect(() => {
@@ -78,6 +79,7 @@ const ViewFlat = () => {
       });
       setMessage('');
       toast.current.show({ severity: 'success', summary: 'Success', detail: 'Message sent successfully', life: 3000 });
+      setShowMessageDialog(false);
     } catch (error) {
       console.error('Error sending message:', error);
       toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error sending message', life: 3000 });
@@ -107,28 +109,34 @@ const ViewFlat = () => {
   };
 
   const actionTemplate = (rowData) => {
-    const items = [
-      {
-        label: 'Edit',
-        icon: 'pi pi-pencil',
-        command: () => editFlat(rowData.id)
-      },
-      {
-        label: 'Messages',
-        icon: 'pi pi-envelope',
-        command: fetchMessages
-      },
-    ];
+    if (rowData.ownerId === user.uid) {
+      const items = [
+        {
+          label: 'Edit',
+          icon: 'pi pi-pencil',
+          command: () => editFlat(rowData.id)
+        },
+        {
+          label: 'Messages',
+          icon: 'pi pi-envelope',
+          command: fetchMessages
+        },
+      ];
 
-    return (
-      <SplitButton icon="pi pi-cog" model={items} className="p-button-primary" />
-    );
+      return (
+        <SplitButton icon="pi pi-cog" model={items} className="p-button-primary" />
+      );
+    } else {
+      return (
+        <Button icon="pi pi-envelope" className="p-button-rounded p-button-primary " onClick={() => setShowMessageDialog(true)} />
+      );
+    }
   };
 
   const legendTemplate = (message) => {
     return (
       <div className="flex align-items-center gap-2 px-2">
-        <Avatar image={message.senderAvatar || '/images/avatar/default.png'} shape="circle" />
+        <Avatar image={message.senderAvatar || ''} shape="circle" />
         <span className="font-bold">{message.senderName}</span>
       </div>
     );
@@ -151,24 +159,21 @@ const ViewFlat = () => {
             {owner && (
               <Column field="ownerName" header="Owner Full Name" body={() => `${owner.firstName} ${owner.lastName}`} />
             )}
-            {flat && flat.ownerId === user.uid && (
-              <Column header="Actions" body={actionTemplate} />
-            )}
+            <Column header="Actions" body={actionTemplate} />
           </DataTable>
         )}
-        {flat && flat.ownerId !== user.uid && (
+        <Dialog header="Send a message to the owner" visible={showMessageDialog} style={{ width: '50vw' }} onHide={() => setShowMessageDialog(false)}>
           <div className="message-container">
-            <h3>Send a message to the owner</h3>
             <InputTextarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               rows={5}
               cols={30}
               placeholder="Type your message here..."
-            />
+            /><p></p>
             <Button label="Send Message" icon="pi pi-send" className="p-button-primary" onClick={sendMessage} />
           </div>
-        )}
+        </Dialog>
         <Dialog header="Messages" visible={showMessagesDialog} style={{ width: '50vw' }} onHide={() => setShowMessagesDialog(false)}>
           {messages.length > 0 && (
             <div className="messages-container">
