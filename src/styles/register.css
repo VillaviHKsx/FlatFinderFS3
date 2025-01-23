@@ -1,28 +1,71 @@
+/* Estilos generales */
 .register-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: #f4f4f4;
-    padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+.register-form {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px; /* Espacio entre botones */
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .register-container {
+    padding: 10px;
   }
-  
+
   .register-form {
-    width: 100%;
-    max-width: 400px;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 90%; /* Ajustamos el ancho para pantallas más pequeñas */
+    max-width: 100%;
+    padding: 15px;
   }
-  
+
   .field {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem; /* Reducimos el espacio entre los campos */
   }
-  
-  .error-message {
-    color: red;
-    margin-top: 10px;
-    font-size: 14px;
-  }  
+
+  .button-group {
+    flex-direction: column; /* Los botones se apilan en pantallas pequeñas */
+    gap: 8px; /* Espacio reducido entre los botones */
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 5px;
+  }
+
+  .register-form {
+    padding: 10px;
+  }
+
+  .button-group {
+    gap: 6px; /* Menos espacio entre los botones */
+  }
+}
