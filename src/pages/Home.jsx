@@ -9,6 +9,8 @@ import { InputSwitch } from 'primereact/inputswitch';
 import { Button } from 'primereact/button';
 import Header from '../components/Header';
 import '../styles/login.css';
+import '../styles/home.css';
+import '../styles/header.css';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
