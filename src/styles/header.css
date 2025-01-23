@@ -1,35 +1,65 @@
+/* Estilos generales */
 .header-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    background-color: #f4f4f4;
-    padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Cambié esto para hacer espacio entre logo y menú */
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.company-logo {
+  width: 50px;
+  height: auto;
+}
+
+.custom-menubar .p-menubar-root-list {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.custom-menubar .p-menubar-root-list > .p-menuitem {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+/* Estilos para el menú hamburguesa en pantallas pequeñas */
+.hamburger-icon {
+  display: none; /* Inicialmente oculto */
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+}
+
+.mobile-menu {
+  display: none; /* Oculto por defecto */
+}
+
+@media (max-width: 768px) {
+  .custom-menubar {
+    display: none; /* Ocultar el Menubar en pantallas pequeñas */
   }
-  
+
+  .hamburger-icon {
+    display: block; /* Mostrar el icono hamburguesa en pantallas pequeñas */
+  }
+
+  .mobile-menu {
+    display: block; /* Mostrar el menú hamburguesa en pantallas pequeñas */
+  }
+
   .header-top {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 100%;
-    margin-bottom: 10px; /* Espacio entre el logo/texto y el menú */
-  }
-  
-  .company-logo {
-    width: 50px; /* Ajusta el tamaño del logo según sea necesario */
-    height: auto;
-    margin-right: 20px; /* Espacio entre el logo y el texto */
-  }
-  
-  .custom-menubar .p-menubar-root-list {
-    display: flex;
     justify-content: space-between;
-    width: 100%;
-    flex-wrap: nowrap; /* Evita que los elementos se envuelvan */
   }
-  
-  .custom-menubar .p-menubar-root-list > .p-menuitem {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-  }
+}
