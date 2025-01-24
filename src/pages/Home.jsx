@@ -6,12 +6,20 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputSwitch } from 'primereact/inputswitch';
 import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import { InputNumber } from 'primereact/inputnumber';
 import Header from '../components/Header';
 import '../styles/login.css';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [flats, setFlats] = useState([]);
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    city: { value: null, matchMode: 'contains' },
+    rentPrice: { value: null, matchMode: 'between' },
+    areaSize: { value: null, matchMode: 'between' },
+  });
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -123,6 +131,13 @@ const Home = () => {
     );
   };
 
+  const onFilterChange = (e, field) => {
+    const value = e.target.value;
+    const newFilters = { ...filters };
+    newFilters[field].value = value;
+    setFilters(newFilters);
+  };
+
   return (
     <div>
       <Header user={user} onLogout={logout} />
@@ -132,15 +147,81 @@ const Home = () => {
           paginator
           rows={5}
           rowsPerPageOptions={[5, 10, 20]}
+          filters={filters}
+          filterDisplay="menu"
         >
-          <Column field="city" header="City" />
+          <Column
+            field="city"
+            header="City"
+            sortable
+            filter
+            filterElement={
+              showFilters && (
+                <InputText
+                  value={filters.city.value}
+                  onChange={(e) => onFilterChange(e, 'city')}
+                  placeholder="Search by city"
+                />
+              )
+            }
+          />
           <Column field="streetName" header="Street Name" />
           <Column field="streetNumber" header="Street Number" />
-          <Column field="areaSize" header="Area Size" />
-          <Column field="hasAC" header="Has AC" body={(rowData) => (rowData.hasAC ? 'Yes' : 'No')} />
+          <Column
+            field="areaSize"
+            header="Area Size"
+            sortable
+            filter
+            filterElement={
+              showFilters && (
+                <div className="p-inputgroup">
+                  <InputNumber
+                    value={filters.areaSize.value ? filters.areaSize.value[0] : null}
+                    onChange={(e) => onFilterChange({ target: { value: [e.value, filters.areaSize.value ? filters.areaSize.value[1] : null] } }, 'areaSize')}
+                    placeholder="Min size"
+                  />
+                  <InputNumber
+                    value={filters.areaSize.value ? filters.areaSize.value[1] : null}
+                    onChange={(e) => onFilterChange({ target: { value: [filters.areaSize.value ? filters.areaSize.value[0] : null, e.value] } }, 'areaSize')}
+                    placeholder="Max size"
+                  />
+                </div>
+              )
+            }
+          />
+          <Column
+            field="hasAC"
+            header="Has AC"
+            body={(rowData) => (rowData.hasAC ? 'Yes' : 'No')}
+          />
           <Column field="yearBuilt" header="Year Built" />
-          <Column field="rentPrice" header="Rent Price" />
-          <Column field="dateAvailable" header="Date Available" body={(rowData) => formatDate(rowData.dateAvailable)} />
+          <Column
+            field="rentPrice"
+            header="Rent Price"
+            sortable
+            filter
+            filterElement={
+              showFilters && (
+                <div className="p-inputgroup">
+                  <InputNumber
+                    value={filters.rentPrice.value ? filters.rentPrice.value[0] : null}
+                    onChange={(e) => onFilterChange({ target: { value: [e.value, filters.rentPrice.value ? filters.rentPrice.value[1] : null] } }, 'rentPrice')}
+                    placeholder="Min price"
+                  />
+                  <InputNumber
+                    value={filters.rentPrice.value ? filters.rentPrice.value[1] : null}
+                    onChange={(e) => onFilterChange({ target: { value: [filters.rentPrice.value ? filters.rentPrice.value[0] : null, e.value] } }, 'rentPrice')}
+                    placeholder="Max price"
+                  />
+                </div>
+              )
+            }
+          />
+          <Column
+            field="dateAvailable"
+            header="Date Available"
+            body={(rowData) => formatDate(rowData.dateAvailable)}
+          />
           <Column field="ownerName" header="Owner Full Name" />
           <Column field="ownerEmail" header="Owner Email" />
           <Column header="Favorite" body={favoriteTemplate} />
