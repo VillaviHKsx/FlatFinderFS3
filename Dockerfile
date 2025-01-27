@@ -1,4 +1,3 @@
-# ********************************************* #
 # Etapa 1: Construcción
 FROM node:18-alpine AS build
 WORKDIR /app
@@ -13,11 +12,9 @@ COPY . .
 # Copy .env file
 COPY .env .env
 
-# Esto generará el directorio `build`
+# Esto generará el directorio build
 RUN npm run build
 
-
-# ****************************************************** #
 # Etapa 2: Servir con Nginx
 FROM nginx:alpine
 # Copiar los archivos construidos al directorio de Nginx
