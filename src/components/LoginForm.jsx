@@ -25,7 +25,7 @@ function LoginForm({ email, setEmail, password, setPassword }) {
           />
           <label htmlFor="password">Password</label>
         </span>
-      </div>
+      </div>      
     </div>
   );
 }

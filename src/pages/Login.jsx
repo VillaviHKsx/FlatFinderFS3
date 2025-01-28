@@ -7,6 +7,7 @@ import LoginForm from '../components/LoginForm';
 import LoginButtons from '../components/LoginButtons';
 import Swal from 'sweetalert2';
 import '../styles/login.css'; // Importamos el archivo CSS
+import ImageLogin from '../images/ImageLogin.jpg';
 
 function Login() {
   const { login } = useContext(AuthContext);
@@ -17,13 +18,11 @@ function Login() {
     e.preventDefault();
 
     try {
-      // Verificar si el correo existe en Firestore
       const usersCollection = collection(db, 'users'); // 'users' es la colección
       const q = query(usersCollection, where('email', '==', email));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
-        // Si la consulta no devuelve resultados, el usuario no existe
         Swal.fire({
           icon: 'error',
           title: 'Usuario no encontrado',
@@ -32,16 +31,13 @@ function Login() {
         return;
       }
 
-      // Si existe el usuario, intentamos autenticarnos con Firebase Auth
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log('Usuario autenticado:', userCredential.user);
 
-      // Iniciar sesión y redirigir a Home
       login(email, password);
     } catch (err) {
       console.error('Error al iniciar sesión:', err);
 
-      // Manejar errores de Firebase Auth
       let errorMessage;
 
       switch (err.code) {
@@ -65,7 +61,6 @@ function Login() {
           break;
       }
 
-      // Mostrar error con SweetAlert2
       Swal.fire({
         icon: 'error',
         title: 'Inicio de Sesión Fallido',
@@ -76,13 +71,23 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h1>FlatFinder FS3</h1>
-      <form onSubmit={handleSubmit} className="login-form">
-        <LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} />
-        <LoginButtons />
-      </form>
+      <div className="login-content">
+        {/* Imagen al lado del formulario */}
+        <div className="login-image">
+          <img src={ImageLogin} alt="Login Illustration" />
+        </div>
+        
+        {/* Formulario de inicio de sesión */}
+        <div className="login-form-container">
+          <h1>FlatFinder FS3</h1>
+          <form onSubmit={handleSubmit} className="login-form">
+            <LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} />
+            <LoginButtons />
+          </form>
+        </div>
+      </div>
     </div>
   );
-};
+}
 
 export default Login;

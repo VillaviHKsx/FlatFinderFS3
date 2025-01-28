@@ -1,92 +1,55 @@
-/* Estilos generales */
 .login-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f4f4f4;
   padding: 20px;
+  background-color: #2C3E50;
+  color: black;
 }
 
-.login-form {
+.login-content {
+  display: flex;
+  flex-direction: row; /* Coloca los elementos uno al lado del otro */
+  align-items: center;
+  justify-content: space-between;
+  max-width: 900px;
   width: 100%;
-  max-width: 400px;
-  background: white;
+  background: #ECF0F1;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.button-group {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+/* Estilo para la imagen */
+.login-image {
+  flex: 1; /* La imagen ocupará una parte proporcional del espacio */
+  padding-right: 20px; /* Espacio entre la imagen y el formulario */
 }
 
-.p-float-label {
-  margin-bottom: 1.5rem;
+.login-image img {
+  max-width: 100%; /* Asegúrate de que la imagen no sobrepase su contenedor */
+  border-radius: 8px; /* Bordes redondeados */
 }
 
-.session-timer {
+/* Contenedor del formulario */
+.login-form-container {
+  flex: 1; /* El formulario ocupará la otra mitad */
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
-}
-
-session-timer svg text {
-  fill: black;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.button-container {
-  display: flex;
   justify-content: center;
 }
 
-/* Estilos responsivos */
+/* Hacer el diseño responsivo */
 @media (max-width: 768px) {
-  .login-container {
-    padding: 10px;
-  }
-
-  .login-form {
-    width: 90%; /* Ajustamos el ancho para pantallas más pequeñas */
-    max-width: 100%;
+  .login-content {
+    flex-direction: column; /* Cambiar a diseño vertical en pantallas pequeñas */
     padding: 15px;
   }
 
-  .button-group {
-    flex-direction: column; /* En pantallas más pequeñas, los botones estarán uno debajo del otro */
-    gap: 10px; /* Espacio entre los botones */
-  }
-
-  .session-timer {
-    margin-top: 15px;
-  }
-
-  .button-container {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 480px) {
-  .login-container {
-    padding: 5px;
-  }
-
-  .login-form {
-    padding: 10px;
-  }
-
-  .button-group {
-    margin-top: 15px;
-    gap: 8px;
-  }
-
-  .session-timer {
-    margin-top: 10px;
+  .login-image {
+    padding: 0;
+    margin-bottom: 20px; /* Añadir espacio debajo de la imagen */
   }
 }
