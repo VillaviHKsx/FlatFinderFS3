@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [flats, setFlats] = useState([]);
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters] = useState(false);
   const [filters, setFilters] = useState({
     city: { value: null, matchMode: 'contains' },
     rentPrice: { value: null, matchMode: 'between' },

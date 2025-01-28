@@ -52,8 +52,6 @@ const MyFlats = () => {
 
   const editFlat = (flatId) => {
     navigate(`/edit-flat/${flatId}`);
-    /*setSelectedFlatId(flatId);
-    setEditFlatDialogVisible(true);*/
   };
 
   const deleteFlat = async (flatId) => {
