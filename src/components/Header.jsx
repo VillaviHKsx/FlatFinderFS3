@@ -5,8 +5,8 @@ import { AuthContext } from '../contexts/AuthContext';
 import '../styles/header.css';
 import logo from '../images/logo.png'; // Importa el logo
 
-const Header = ({ onLogout }) => {
-  const { user } = useContext(AuthContext);
+const Header = () => {
+  const { user, handleDeleteAccount, onLogout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const items = [
@@ -15,7 +15,7 @@ const Header = ({ onLogout }) => {
     { label: 'My Flats', icon: 'pi pi-fw pi-building', command: () => navigate('/my-flats') },
     { label: 'Favourites', icon: 'pi pi-fw pi-star', command: () => navigate('/favourites') },
     ...(user?.role === 'admin' ? [{ label: 'All Users', icon: 'pi pi-fw pi-users', command: () => navigate('/all-users') }] : []),
-    { label: 'Delete Account', icon: 'pi pi-fw pi-trash', command: () => {/* handle delete account */} },
+    { label: 'Delete Account', icon: 'pi pi-fw pi-trash', command: handleDeleteAccount },
     { label: 'Logout', icon: 'pi pi-fw pi-sign-out', command: onLogout }
   ];
 

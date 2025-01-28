@@ -39,9 +39,21 @@ const UpdateDialog = ({ visible, onHide }) => {
           });
         } else {
           console.error('User not found');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'User not found',
+            backdrop: true,
+          });
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error fetching user data',
+          backdrop: true,
+        });
       }
     };
 
@@ -56,60 +68,35 @@ const UpdateDialog = ({ visible, onHide }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Obtener la contraseña actual del usuario desde Firestore
-    const userDoc = await getDoc(doc(db, 'users', userId || user.uid));
-    if (userDoc.exists()) {
-      const data = userDoc.data();
-      const storedPassword = data.password;
-
-      if (formData.confirmPassword !== storedPassword) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'The password does not match the current password',
-          backdrop: true, // Asegura que el mensaje se muestre encima del popup
-        });
-        return;
-      }
-
-      try {
-        await updateDoc(doc(db, 'users', userId || user.uid), {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          birthDate: formData.birthDate,
-        });
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Profile updated successfully',
-          backdrop: true, // Asegura que el mensaje se muestre encima del popup
-        });
-        updateUser({
-          fullName: `${formData.firstName} ${formData.lastName}`.trim(),
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          birthDate: formData.birthDate,
-        });
-        onHide();
-        navigate('/home');
-      } catch (error) {
-        console.error('Error updating profile:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Error updating profile',
-          backdrop: true, // Asegura que el mensaje se muestre encima del popup
-        });
-      }
-    } else {
-      console.error('User not found');
+    try {
+      await updateDoc(doc(db, 'users', userId || user.uid), {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        birthDate: formData.birthDate,
+      });
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Profile updated successfully',
+        backdrop: true,
+      });
+      updateUser({
+        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        birthDate: formData.birthDate,
+      });
+      onHide();
+      navigate('/home');
+    } catch (error) {
+      console.error('Error updating profile:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'User not found',
-        backdrop: true, // Asegura que el mensaje se muestre encima del popup
+        text: 'Error updating profile',
+        backdrop: true,
       });
     }
   };
@@ -148,4 +135,3 @@ const UpdateDialog = ({ visible, onHide }) => {
 };
 
 export default UpdateDialog;
-

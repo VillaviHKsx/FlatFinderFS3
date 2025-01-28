@@ -81,7 +81,7 @@ const NewFlat = ({ visible, onHide, onNewFlat }) => {
           <InputText id="city" name="city" value={formData.city} onChange={handleInputChange} />
         </div>
         <div className="p-field">
-          <label htmlFor="streetName">Street Nam: </label>
+          <label htmlFor="streetName">Street Name: </label>
           <InputText id="streetName" name="streetName" value={formData.streetName} onChange={handleInputChange} />
         </div>
         <div className="p-field">

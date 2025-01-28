@@ -1,8 +1,9 @@
-import React, { createContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebaseConfig';
-import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { signInWithEmailAndPassword, signOut, deleteUser } from 'firebase/auth';
+import { doc, getDoc, deleteDoc } from 'firebase/firestore';
+import Swal from 'sweetalert2';
 
 export const AuthContext = createContext();
 
@@ -32,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('isLoggedIn', true);
       localStorage.setItem('loginTime', Date.now());
       setSessionTime(300); // Reinicia el tiempo de sesión
-      startSessionCountdown();
+      //startSessionCountdown();
 
       // Usa un setTimeout para evitar conflictos de navegación
       setTimeout(() => navigate('/home'), 0);
@@ -42,80 +43,73 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = async () => {
+  const handleDeleteAccount = async () => {
+    const currentUser = auth.currentUser;
+
+    if (currentUser) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            // Eliminar el documento del usuario en Firestore
+            await deleteDoc(doc(db, 'users', currentUser.uid));
+
+            // Eliminar el usuario en Firebase Authentication
+            await deleteUser(currentUser);
+
+            // Cerrar sesión
+            await signOut(auth);
+            setIsLoggedIn(false);
+            setUser(null);
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('loginTime');
+
+            Swal.fire({
+              icon: 'success',
+              title: 'Account Deleted',
+              text: 'Your account has been deleted successfully.',
+            });
+
+            navigate('/');
+          } catch (error) {
+            console.error('Error deleting account:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'There was an error deleting your account. Please try again later.',
+            });
+          }
+        }
+      });
+    }
+  };
+
+  const onLogout = async () => {
     try {
       await signOut(auth);
       setIsLoggedIn(false);
       setUser(null);
       localStorage.removeItem('isLoggedIn');
       localStorage.removeItem('loginTime');
-      clearInterval(sessionInterval.current);
       navigate('/');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
-    }
-  };
-
-  const startSessionCountdown = () => {
-    clearInterval(sessionInterval.current);
-    sessionInterval.current = setInterval(() => {
-      setSessionTime((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(sessionInterval.current);
-          logout();
-          return 0;
-        }
-        return prevTime - 1;
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'There was an error logging out. Please try again later.',
       });
-    }, 1000);
-  };
-
-  const updateUser = (updatedUser) => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      ...updatedUser,
-    }));
-  };
-
-  useEffect(() => {
-    const storedIsLoggedIn = localStorage.getItem('isLoggedIn');
-    const loginTime = localStorage.getItem('loginTime');
-
-    if (storedIsLoggedIn && loginTime) {
-      const elapsedTime = (Date.now() - loginTime) / 1000;
-      if (elapsedTime < 300) {
-        setIsLoggedIn(true);
-        setSessionTime(300 - elapsedTime);
-        startSessionCountdown();
-      } else {
-        logout();
-      }
     }
-
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        const fetchUserData = async () => {
-          const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-          const userData = userDoc.exists() ? userDoc.data() : {};
-          setUser({
-            fullName: `${userData.firstName || ''} ${userData.lastName || ''}`.trim(),
-            email: currentUser.email,
-            uid: currentUser.uid,
-            ...userData,
-          });
-        };
-        fetchUserData();
-      } else {
-        setIsLoggedIn(false);
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
+  };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, sessionTime, updateUser }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, handleDeleteAccount, onLogout }}>
       {children}
     </AuthContext.Provider>
   );

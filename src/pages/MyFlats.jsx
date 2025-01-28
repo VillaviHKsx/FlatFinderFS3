@@ -18,7 +18,7 @@ const MyFlats = () => {
   const [flats, setFlats] = useState([]);
   const [newFlatDialogVisible, setNewFlatDialogVisible] = useState(false);
   const [editFlatDialogVisible, setEditFlatDialogVisible] = useState(false);
-  const [selectedFlatId, setSelectedFlatId] = useState(null);
+  const [selectedFlatId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,8 +51,9 @@ const MyFlats = () => {
   };
 
   const editFlat = (flatId) => {
-    setSelectedFlatId(flatId);
-    setEditFlatDialogVisible(true);
+    navigate(`/edit-flat/${flatId}`);
+    /*setSelectedFlatId(flatId);
+    setEditFlatDialogVisible(true);*/
   };
 
   const deleteFlat = async (flatId) => {

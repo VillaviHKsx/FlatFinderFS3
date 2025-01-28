@@ -52,26 +52,20 @@ const EditFlat = ({ visible, onHide }) => {
     fetchFlat();
   }, [flatId]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: checked,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await updateDoc(doc(db, 'flats', flatId), {
+      const flatDoc = doc(db, 'flats', flatId);
+      await updateDoc(flatDoc, {
         city: formData.city,
         streetName: formData.streetName,
         streetNumber: formData.streetNumber,
@@ -87,8 +81,7 @@ const EditFlat = ({ visible, onHide }) => {
         text: 'Flat updated successfully',
         backdrop: true,
       });
-      onHide();
-      navigate('/home');
+      navigate('/my-flats');
     } catch (error) {
       console.error('Error updating flat:', error);
       Swal.fire({
@@ -101,41 +94,41 @@ const EditFlat = ({ visible, onHide }) => {
   };
 
   return (
-    <Dialog header="Edit Flat" visible={visible} style={{ width: '50vw' }} onHide={onHide}>
+    <Dialog header="Edit Flat" visible={true} style={{ width: '50vw' }} onHide={() => navigate('/my-flats')}>
       <form onSubmit={handleSubmit}>
         <div className="p-field">
           <label htmlFor="city">City: </label>
-          <InputText id="city" name="city" value={formData.city} onChange={handleInputChange} />
+          <InputText id="city" name="city" value={formData.city} onChange={handleChange} />
         </div>
         <div className="p-field">
           <label htmlFor="streetName">Street Name: </label>
-          <InputText id="streetName" name="streetName" value={formData.streetName} onChange={handleInputChange} />
+          <InputText id="streetName" name="streetName" value={formData.streetName} onChange={handleChange} />
         </div>
         <div className="p-field">
           <label htmlFor="streetNumber">Street Number: </label>
-          <InputNumber id="streetNumber" name="streetNumber" value={formData.streetNumber} onValueChange={handleInputChange} />
+          <InputText id="streetNumber" name="streetNumber" value={formData.streetNumber} onChange={handleChange} />
         </div>
         <div className="p-field">
           <label htmlFor="areaSize">Area Size: </label>
-          <InputNumber id="areaSize" name="areaSize" value={formData.areaSize} onValueChange={handleInputChange} />
+          <InputNumber id="areaSize" name="areaSize" value={formData.areaSize} onValueChange={(e) => handleChange({ target: { name: 'areaSize', value: e.value } })} />
         </div>
-        <div className="p-field-checkbox">
+        <div className="p-field">
           <label htmlFor="hasAC">Has AC: </label>
-          <Checkbox inputId="hasAC" name="hasAC" checked={formData.hasAC} onChange={handleCheckboxChange} />
+          <Checkbox id="hasAC" name="hasAC" checked={formData.hasAC} onChange={handleChange} />
         </div>
         <div className="p-field">
           <label htmlFor="yearBuilt">Year Built: </label>
-          <InputNumber id="yearBuilt" name="yearBuilt" value={formData.yearBuilt} onValueChange={handleInputChange} />
+          <InputNumber id="yearBuilt" name="yearBuilt" value={formData.yearBuilt} onValueChange={(e) => handleChange({ target: { name: 'yearBuilt', value: e.value } })} />
         </div>
         <div className="p-field">
           <label htmlFor="rentPrice">Rent Price: </label>
-          <InputNumber id="rentPrice" name="rentPrice" value={formData.rentPrice} onValueChange={handleInputChange} />
+          <InputNumber id="rentPrice" name="rentPrice" value={formData.rentPrice} onValueChange={(e) => handleChange({ target: { name: 'rentPrice', value: e.value } })} />
         </div>
         <div className="p-field">
           <label htmlFor="dateAvailable">Date Available: </label>
-          <InputText id="dateAvailable" name="dateAvailable" value={formData.dateAvailable} onChange={handleInputChange} />
+          <InputText id="dateAvailable" name="dateAvailable" type="date" value={formData.dateAvailable ? formData.dateAvailable.toISOString().split('T')[0] : ''} onChange={handleChange} />
         </div>
-        <Button type="submit" label="Update" className="p-button-primary" />
+        <Button label="Update" icon="pi pi-check" type="submit" />
       </form>
     </Dialog>
   );
