@@ -1,6 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menubar } from 'primereact/menubar';
+import { Sidebar } from 'primereact/sidebar';
+import { Button } from 'primereact/button';
 import { AuthContext } from '../contexts/AuthContext';
 import '../styles/header.css';
 import logo from '../images/logo.png'; // Importa el logo
@@ -8,6 +10,7 @@ import logo from '../images/logo.png'; // Importa el logo
 const Header = () => {
   const { user, handleDeleteAccount, onLogout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [visible, setVisible] = useState(false);
 
   const items = [
     { label: 'Home', icon: 'pi pi-fw pi-home', command: () => navigate('/home') },
@@ -19,6 +22,14 @@ const Header = () => {
     { label: 'Logout', icon: 'pi pi-fw pi-sign-out', command: onLogout }
   ];
 
+  const start = (
+    <img src={logo} alt="Company Logo" className="company-logo" />
+  );
+
+  const end = (
+    <Button icon="pi pi-bars" className="p-button-rounded p-button-text" onClick={() => setVisible(true)} />
+  );
+
   return (
     <div className="header-container">
       <div className="header-top">
@@ -27,6 +38,17 @@ const Header = () => {
         {user?.avatarUrl && <img src={user.avatarUrl} alt="User Avatar" className="user-avatar" />}
       </div>
       <Menubar model={items} className="custom-menubar" />
+
+      <Sidebar visible={visible} onHide={() => setVisible(false)}>
+        <ul className="sidebar-menu">
+          {items.map((item, index) => (
+            <li key={index} onClick={item.command}>
+              <i className={item.icon}></i>
+              <span>{item.label}</span>
+            </li>
+          ))}
+        </ul>
+      </Sidebar>
     </div>
   );
 };

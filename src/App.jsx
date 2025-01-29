@@ -15,6 +15,7 @@ import Favourites from './pages/Favourites';
 
 import PrivateRoute from './components/PrivateRoute';
 
+import 'primereact/resources/themes/saga-blue/theme.css';  // Tema de PrimeReact
 import 'primereact/resources/themes/lara-light-indigo/theme.css';  // Tema
 import 'primereact/resources/primereact.min.css';                // Componentes
 import 'primeicons/primeicons.css';                             // Iconos

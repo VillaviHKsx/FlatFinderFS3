@@ -10,9 +10,9 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  const [setSessionTime] = useState(300); // 5 minutos en segundos
+  const [sessionTime, setSessionTime] = useState(300); // 5 minutos en segundos
   const navigate = useNavigate();
-  //const sessionInterval = useRef(null); // Usamos useRef para evitar duplicados en el contador
+  const sessionInterval = useRef(null); // Usamos useRef para evitar duplicados en el contador
 
   const login = async (email, password) => {
     try {

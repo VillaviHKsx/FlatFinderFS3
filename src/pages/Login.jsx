@@ -26,8 +26,8 @@ function Login() {
         // Si la consulta no devuelve resultados, el usuario no existe
         Swal.fire({
           icon: 'error',
-          title: 'Usuario no encontrado',
-          text: 'El correo ingresado no está registrado en el sistema.',
+          title: 'User not found',
+          text: 'The email entered is not registered in the system.',
         });
         return;
       }
@@ -46,22 +46,22 @@ function Login() {
 
       switch (err.code) {
         case 'auth/user-not-found':
-          errorMessage = 'Usuario no encontrado. Por favor verifica tus credenciales.';
+          errorMessage = 'User not found. Please check your credentials.';
           break;
         case 'auth/wrong-password':
-          errorMessage = 'Contraseña incorrecta. Inténtalo nuevamente.';
+          errorMessage = 'Incorrect password. Please try again.';
           break;
         case 'auth/missing-password':
-          errorMessage = 'Contraseña en blanco. Inténtalo nuevamente.';
+          errorMessage = 'Password is blank. Please try again.';
           break;
         case 'auth/invalid-credential':
-          errorMessage = 'Contraseña incorrecta. Inténtalo nuevamente.';
+          errorMessage = 'Incorrect password. Please try again.';
           break;
         case 'auth/invalid-email':
-          errorMessage = 'El correo electrónico proporcionado no es válido.';
+          errorMessage = 'The provided email is not valid.';
           break;
         default:
-          errorMessage = 'Ocurrió un error al iniciar sesión. Por favor intenta de nuevo.';
+          errorMessage = 'An error occurred while logging in. Please try again.';
           break;
       }
 
@@ -76,11 +76,14 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h1>FlatFinder FS3</h1>
-      <form onSubmit={handleSubmit} className="login-form">
+      <div className="login-image"></div>
+      <div>
+        <h1 className="text1">FlatFinder FS3</h1>
+        <form onSubmit={handleSubmit} className="login-form">
         <LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} />
         <LoginButtons />
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

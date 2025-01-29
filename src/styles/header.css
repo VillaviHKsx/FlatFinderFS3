@@ -13,7 +13,7 @@
     justify-content: center;
     width: 100%;
     margin-bottom: 10px; /* Espacio entre el logo/texto y el menú */
-  }
+  } 
   
   .company-logo {
     width: 50px; /* Ajusta el tamaño del logo según sea necesario */
@@ -34,17 +34,26 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
+    margin-left: 20px;
   }
   
-  .custom-menubar .p-menubar-root-list {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    flex-wrap: nowrap; /* Evita que los elementos se envuelvan */
-  }
-  
-  .custom-menubar .p-menubar-root-list > .p-menuitem {
-    flex: 1;
-    display: flex;
+  .custom-menubar {
     justify-content: center;
+    width: 80%;
+  }
+  
+  .sidebar-menu {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar-menu li {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    cursor: pointer;
+  }
+  
+  .sidebar-menu li i {
+    margin-right: 0.5rem;
   }
