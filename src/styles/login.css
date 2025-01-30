@@ -1,4 +1,4 @@
-.login-container {
+/*.login-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -49,4 +49,78 @@
   .button-container {
     display: flex;
     justify-content: center;
+  }*/
+
+
+  .login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #2C3E50;
+    color: black;
+  }
+  
+  .login-content {
+    display: flex;
+    flex-direction: row; /* Coloca los elementos uno al lado del otro */
+    align-items: center;
+    justify-content: space-between;
+    max-width: 900px;
+    width: 80%;
+    background: #ECF0F1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Estilo para la imagen */
+  .login-image {
+    flex: 1; /* La imagen ocupará una parte proporcional del espacio */
+    padding-right: 20px; /* Espacio entre la imagen y el formulario */
+  }
+  
+  .login-image img {
+    max-width: 100%; /* Asegúrate de que la imagen no sobrepase su contenedor */
+    border-radius: 8px; /* Bordes redondeados */
+  }
+  
+  .login-form {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+
+  /* Contenedor del formulario */
+  .login-form-container {
+    flex: 1; /* El formulario ocupará la otra mitad */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Hacer el diseño responsivo */
+  @media (max-width: 768px) {
+   
+    .login-content {
+      flex-direction: column; /* Cambiar a diseño vertical en pantallas pequeñas */
+      padding: 10px;
+    }
+  
+    .login-image {
+      padding: 0;
+      margin-bottom: 20px; /* Añadir espacio debajo de la imagen */
+    }
   }

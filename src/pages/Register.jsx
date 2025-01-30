@@ -9,6 +9,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { FileUpload } from 'primereact/fileupload';
 import '../styles/register.css'; // Importamos los estilos
+import ImageRegister from '../images/ImageRegister.jpg';
 
 const Register = () => {
   const [firstName, setFirstName] = useState('');
@@ -109,8 +110,18 @@ const Register = () => {
 
   return (
     <div className="register-container">
-      <h1>Register User</h1>
+    
+      <div className="register-content">
+      {/* Imagen */}
+      <img
+        src={ImageRegister} // Cambia esto por la ruta real de tu imagen
+        alt="Registration"
+        className="register-image"
+      />
+  
+      {/* Formulario */}
       <form onSubmit={handleRegister} className="register-form">
+      <h1 className="text">Register User</h1>
         <div className="field">
           <span className="p-float-label">
             <InputText id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
@@ -164,10 +175,11 @@ const Register = () => {
         {error && <p className="error-message">{error}</p>}
         <div className="button-group">
           <Button type="submit" label="Register" className="p-button-rounded p-button-success" />
-          <Button type="button" label="Cancel" className="p-button-rounded p-button-secondary" onClick={handleCancel} />
+          <Button type="button" label="Cancel" className="p-button-rounded p-button-outlined" onClick={handleCancel} />
         </div>
       </form>
     </div>
+  </div>
   );
 }
 

@@ -1,4 +1,4 @@
-.register-container {
+/*.register-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,4 +25,134 @@
     color: red;
     margin-top: 10px;
     font-size: 14px;
-  }  
+  }  */
+
+  /* Estilos generales */
+
+  
+.register-container {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #2C3E50;
+  padding: 20px;
+} 
+
+.text {
+  text-align: center;
+}
+
+.register-form {
+  width: 100%;
+  max-width: 350px;
+  background: #ECF0F1;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex: 1; 
+}
+
+.register-content {
+  display: flex;
+  flex-direction: row; /* Alinea el formulario y la imagen en fila */
+  align-items: stretch; /* Hace que ambos (imagen y formulario) tengan la misma altura */
+  gap: 20px; /* Espacio entre la imagen y el formulario */
+  width: 100%; /* Ocupa todo el ancho disponible */
+  max-width: 1200px; /* Limita el tamaño máximo */
+}
+
+/* Imagen responsiva */
+.register-image {
+  width: 50%; /* Ocupa el 50% del espacio del contenedor */
+  height: auto; /* Mantén las proporciones */
+  object-fit: cover; /* Asegura que la imagen ocupe todo su espacio sin deformarse */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Sombra opcional */
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px; /* Espacio entre los botones */
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .register-content {
+    flex-direction: column; /* Cambia a disposición vertical */
+    align-items: center; /* Centra los elementos verticalmente */
+  }
+
+  .register-image,
+  .register-form {
+    width: 100%; /* Ocupan todo el ancho disponible */
+    max-width: 400px; /* Limita el ancho máximo */
+  }
+
+  .register-image {
+    height: 200px; /* Ajusta la altura de la imagen */
+  }
+
+  .register-container {
+    padding: 15px;
+  }
+
+  .register-form {
+    padding: 15px;
+  }
+
+  .field {
+    margin-bottom: 1rem; /* Reducimos el espacio entre los campos */
+  }
+
+  .button-group {
+    flex-direction: column; /* Los botones se apilan en pantallas pequeñas */
+    gap: 8px; /* Espacio reducido entre los botones */
+  }
+
+  .field label {
+    font-size: 0.9rem; /* Ajustamos el tamaño de las etiquetas */
+  }
+
+  .p-inputtext {
+    font-size: 0.95rem; /* Ajustamos el tamaño del texto */
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 5px;
+  }
+
+  .register-form {
+    padding: 10px;
+  }
+
+  .register-image {
+    height: 150px; /* Imagen más pequeña */
+  }
+
+  .button-group {
+    gap: 6px; /* Menos espacio entre los botones */
+  }
+
+  .p-inputtext {
+    font-size: 0.9rem; /* Ajustamos el tamaño del texto */
+  }
+
+  .field label {
+    font-size: 0.85rem; /* Etiquetas más pequeñas */
+  }
+}

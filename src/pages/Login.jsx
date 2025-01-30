@@ -7,6 +7,7 @@ import LoginForm from '../components/LoginForm';
 import LoginButtons from '../components/LoginButtons';
 import Swal from 'sweetalert2';
 import '../styles/login.css'; // Importamos el archivo CSS
+import ImageLogin from '../images/ImageLogin.jpg';
 
 function Login() {
   const { login } = useContext(AuthContext);
@@ -75,7 +76,7 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
+/*    <div className="login-container">
       <div className="login-image"></div>
       <div>
         <h1 className="text1">FlatFinder FS3</h1>
@@ -87,5 +88,24 @@ function Login() {
     </div>
   );
 };
+*/
 
+    <div className="login-container">
+      <div className="login-content">
+        {/* Imagen al lado del formulario */}
+        <div className="login-image">
+          <img src={ImageLogin} alt="Login Illustration" />
+        </div>
+      {/* Formulario de inicio de sesión */}
+        <div className="login-form-container">
+          <h1>FlatFinder FS3</h1>
+          <form onSubmit={handleSubmit} className="login-form">
+          <LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} />
+          <LoginButtons />
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
 export default Login;
