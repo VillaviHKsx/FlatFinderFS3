@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
@@ -10,8 +10,8 @@ import { Button } from 'primereact/button';
 import Swal from 'sweetalert2';
 import '../styles/login.css';
 
-const UpdateDialog = ({ visible, onHide }) => {
-  const { user, updateUser } = useContext(AuthContext);
+const UpdateDialog = ({ visible, onHide, onUpdate }) => {
+  const { user } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -20,6 +20,7 @@ const UpdateDialog = ({ visible, onHide }) => {
     password: '',
     confirmPassword: ''
   });
+  const [storedPassword, setStoredPassword] = useState('');
   const navigate = useNavigate();
   const { userId } = useParams();
 
@@ -37,6 +38,7 @@ const UpdateDialog = ({ visible, onHide }) => {
             password: '',
             confirmPassword: ''
           });
+          setStoredPassword(data.password || '');
         } else {
           console.error('User not found');
           Swal.fire({
@@ -62,34 +64,45 @@ const UpdateDialog = ({ visible, onHide }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (formData.password !== storedPassword) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Incorrect password',
+        backdrop: true,
+      });
+      return;
+    }
+
     try {
-      await updateDoc(doc(db, 'users', userId || user.uid), {
+      const updatedUser = {
+        ...user,
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         birthDate: formData.birthDate,
-      });
+        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+      };
+
+      await onUpdate(updatedUser);
+
       Swal.fire({
         icon: 'success',
         title: 'Success',
         text: 'Profile updated successfully',
         backdrop: true,
       });
-      updateUser({
-        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        birthDate: formData.birthDate,
-      });
       onHide();
-      navigate('/home');
+      navigate(`/profile/${userId || user.uid}`);
     } catch (error) {
       console.error('Error updating profile:', error);
       Swal.fire({

@@ -11,7 +11,7 @@ import UpdateDialog from '../pages/UpdateDialog';
 import '../styles/login.css';
 
 const Profile = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user, updateUser, logout } = useContext(AuthContext);
   const [profileData, setProfileData] = useState(null);
   const [isDialogVisible, setIsDialogVisible] = useState(false);
   const { userId } = useParams();
@@ -37,6 +37,12 @@ const Profile = () => {
     setIsDialogVisible(true);
   };
 
+  const handleUpdate = async (updatedUser) => {
+    await updateUser(updatedUser);
+    setProfileData(updatedUser);
+    setIsDialogVisible(false);
+  };
+
   if (!profileData) {
     return <p>Loading...</p>;
   }
@@ -45,7 +51,7 @@ const Profile = () => {
 
   return (
     <div>
-      <Header user={user} onLogout={logout} />
+      <Header />
       <div className="profile-container">
         <DataTable value={[profileData]}>
           <Column field="firstName" header="First Name" />
@@ -62,7 +68,7 @@ const Profile = () => {
           )}
         </DataTable>
       </div>
-      <UpdateDialog visible={isDialogVisible} onHide={() => setIsDialogVisible(false)} />
+      <UpdateDialog visible={isDialogVisible} onHide={() => setIsDialogVisible(false)} onUpdate={handleUpdate} />
     </div>
   );
 };

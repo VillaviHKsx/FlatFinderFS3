@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menubar } from 'primereact/menubar';
 import { Sidebar } from 'primereact/sidebar';
-import { Button } from 'primereact/button';
 import { AuthContext } from '../contexts/AuthContext';
 import '../styles/header.css';
 import logo from '../images/logo.png'; // Importa el logo
@@ -21,14 +20,6 @@ const Header = () => {
     { label: 'Delete Account', icon: 'pi pi-fw pi-trash', command: handleDeleteAccount },
     { label: 'Logout', icon: 'pi pi-fw pi-sign-out', command: onLogout }
   ];
-
-  const start = (
-    <img src={logo} alt="Company Logo" className="company-logo" />
-  );
-
-  const end = (
-    <Button icon="pi pi-bars" className="p-button-rounded p-button-text" onClick={() => setVisible(true)} />
-  );
 
   return (
     <div className="header-container">

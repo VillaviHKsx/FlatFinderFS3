@@ -2,7 +2,7 @@ import React, { createContext, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebaseConfig';
 import { signInWithEmailAndPassword, signOut, deleteUser } from 'firebase/auth';
-import { doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 
 export const AuthContext = createContext();
@@ -108,8 +108,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
+  const updateUser = async (updatedUser) => {
+    try {
+      const userDoc = doc(db, 'users', updatedUser.uid);
+      await updateDoc(userDoc, updatedUser);
+      setUser(updatedUser);
+    } catch (error) {
+      console.error('Error updating user:', error);
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, handleDeleteAccount, onLogout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, setUser, login, handleDeleteAccount, onLogout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
